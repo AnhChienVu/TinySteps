@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Georgia", "Times New Roman", serif;
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --color-warm-bg: #f5f5f0;
+  --color-olive: #5A5A40;
+  --color-cream: #FFFFFF;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-warm-bg);
+  color: #1a1a1a;
+}
+
+.serif {
+  font-family: var(--font-serif);
+}

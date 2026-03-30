@@ -1,0 +1,198 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.email == "vuanhchien003@gmail.com" ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        )
+      );
+    }
+
+    function isValidEmail(email) {
+      return email is string
+        && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string
+        && dateStr.matches("^\\d{4}-\\d{2}-\\d{2}.*");
+    }
+
+    function childDoc(childId) {
+      return get(/databases/$(database)/documents/children/$(childId));
+    }
+
+    function childExists(childId) {
+      return exists(/databases/$(database)/documents/children/$(childId));
+    }
+
+    function canAccessChild(childId) {
+      return (signedIn() || isAdmin())
+        && childExists(childId)
+        && (
+          isAdmin()
+          ||
+          childDoc(childId).data.ownerId == request.auth.uid
+          || request.auth.uid in childDoc(childId).data.caregivers
+        );
+    }
+
+    function inviteEmailMatches(inviteeEmail) {
+      return signedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email == inviteeEmail;
+    }
+
+    function canReadInviteResource() {
+      return signedIn()
+        && (
+          isAdmin()
+          || (
+            request.auth.token.email != null
+            && request.auth.token.email == resource.data.inviterEmail
+          )
+          || canAccessChild(resource.data.childId)
+          || resource.data.inviterId == request.auth.uid
+          || inviteEmailMatches(resource.data.inviteeEmail)
+        );
+    }
+
+    function inviteFieldsAreValid(inviteData) {
+      return inviteData.keys().hasOnly([
+        'id',
+        'childId',
+        'childName',
+        'inviterId',
+        'inviterEmail',
+        'inviteeEmail',
+        'status',
+        'timestamp'
+      ])
+      && inviteData.childId is string
+      && inviteData.childName is string
+      && inviteData.inviterId is string
+      && isValidEmail(inviteData.inviterEmail)
+      && isValidEmail(inviteData.inviteeEmail)
+      && inviteData.status in ['pending', 'accepted', 'declined']
+      && inviteData.timestamp is string;
+    }
+
+    function childFieldsAreValid(childData) {
+      return childData.keys().hasOnly([
+        'id',
+        'name',
+        'birthDate',
+        'photo',
+        'notes',
+        'caregivers',
+        'ownerId'
+      ])
+      && childData.id is string
+      && childData.name is string
+      && childData.name.size() > 0
+      && childData.name.size() < 100
+      && isValidDateString(childData.birthDate)
+      && childData.ownerId is string
+      && childData.caregivers is list
+      && request.auth.uid in childData.caregivers;
+    }
+
+    function childActivityFieldsAreValid(activityData) {
+      return activityData.childId is string
+        && activityData.loggedBy is string
+        && activityData.loggedBy == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow read: if isSelf(userId) || isAdmin();
+      allow create: if isSelf(userId)
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email is string
+        && isValidEmail(request.resource.data.email)
+        && request.resource.data.role in ['parent', 'caregiver', 'admin'];
+      allow update: if isSelf(userId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.email is string
+        && isValidEmail(request.resource.data.email);
+      allow delete: if false;
+    }
+
+    match /children/{childId} {
+      allow read: if canAccessChild(childId);
+      allow create: if signedIn()
+        && request.resource.data.id == childId
+        && request.resource.data.ownerId == request.auth.uid
+        && childFieldsAreValid(request.resource.data);
+      allow update: if (isAdmin() || canAccessChild(childId))
+        && request.resource.data.id == childId
+        && request.resource.data.ownerId == resource.data.ownerId
+        && childFieldsAreValid(request.resource.data);
+      allow delete: if isAdmin() || (signedIn() && resource.data.ownerId == request.auth.uid);
+
+      match /{subcollection}/{docId} {
+        allow read: if canAccessChild(childId);
+        allow create: if canAccessChild(childId)
+          && request.resource.data.childId == childId
+          && childActivityFieldsAreValid(request.resource.data);
+        allow update: if canAccessChild(childId)
+          && resource.data.childId == childId
+          && request.resource.data.childId == childId
+          && childActivityFieldsAreValid(request.resource.data);
+        allow delete: if isAdmin() || canAccessChild(childId);
+      }
+    }
+
+    match /invites/{inviteId} {
+      allow read: if canReadInviteResource();
+      allow create: if signedIn()
+        && inviteFieldsAreValid(request.resource.data)
+        && request.resource.data.inviterId == request.auth.uid
+        && request.resource.data.inviterEmail == request.auth.token.email
+        && request.resource.data.status == 'pending'
+        && canAccessChild(request.resource.data.childId);
+      allow update: if (
+          isAdmin()
+          || canAccessChild(resource.data.childId)
+          || inviteEmailMatches(resource.data.inviteeEmail)
+        )
+        && inviteFieldsAreValid(request.resource.data)
+        && request.resource.data.childId == resource.data.childId
+        && request.resource.data.inviterId == resource.data.inviterId
+        && request.resource.data.inviterEmail == resource.data.inviterEmail
+        && request.resource.data.inviteeEmail == resource.data.inviteeEmail
+        && request.resource.data.childName == resource.data.childName;
+      allow delete: if isAdmin() || signedIn()
+        && (
+          resource.data.inviterId == request.auth.uid
+          || (
+            request.auth.token.email != null
+            && request.auth.token.email == resource.data.inviterEmail
+          )
+          || canAccessChild(resource.data.childId)
+        );
+    }
+
+    match /test/{docId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

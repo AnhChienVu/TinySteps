@@ -1,0 +1,47 @@
+name: Bug Report
+description: Report a bug in TinySteps
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please share enough detail for us to reproduce it.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+      placeholder: A short description of the problem
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps To Reproduce
+      description: What steps should we follow?
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See error ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, device, app area, or backend environment details
+      placeholder: Chrome on macOS, Production backend on Render, etc.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Logs, screenshots, or anything else useful

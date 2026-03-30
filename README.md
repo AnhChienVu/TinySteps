@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TinySteps
+
+TinySteps is a parenting companion for tracking baby care activity across feeding, sleep, diapers, health notes, caregiver invites, and AI-assisted summaries.
+
+This repository is a monorepo with:
+
+- `apps/frontend`: Next.js frontend for the user-facing app
+- `apps/backend`: NestJS API for auth verification, business logic, and AI chat
+- `supabase/`: SQL migrations for the production database
+- `docs/`: implementation notes, backend learning steps, and deployment guides
+
+## Tech Stack
+
+- Frontend: Next.js, React, Tailwind CSS
+- Backend: NestJS
+- Auth: Firebase Authentication
+- Database: Supabase Postgres
+- AI: Gemini with backend fallback logic
+
+## Repository Structure
+
+```text
+tinysteps/
+  apps/
+    frontend/
+    backend/
+  docs/
+  supabase/
+    migrations/
+```
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set up env files:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp apps/frontend/.env.example apps/frontend/.env.local
+cp apps/backend/.env.example apps/backend/.env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the apps:
 
-## Learn More
+```bash
+npm run dev:frontend
+npm run dev:backend
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Common Commands
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev:frontend
+npm run dev:backend
+npm run lint:frontend
+npm run typecheck:frontend
+npm run typecheck:backend
+npm run build:frontend
+npm run build:backend
+npm run ci
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+Recommended production setup:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Frontend: Vercel
+- Backend: Render
+- Database: Supabase
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [`docs/deployment.md`](/Users/anhchienvu/Code/tinysteps/docs/deployment.md) for setup details.
+
+## CI/CD
+
+- CI: GitHub Actions via [`.github/workflows/ci.yml`](/Users/anhchienvu/Code/tinysteps/.github/workflows/ci.yml)
+- Frontend CD: Vercel GitHub integration
+- Backend CD: Render auto deploy through [`render.yaml`](/Users/anhchienvu/Code/tinysteps/render.yaml)
+
+## Product Docs
+
+- [`docs/backend-step-01.md`](/Users/anhchienvu/Code/tinysteps/docs/backend-step-01.md) through [`docs/backend-step-11.md`](/Users/anhchienvu/Code/tinysteps/docs/backend-step-11.md)
+- [`docs/supabase-setup.md`](/Users/anhchienvu/Code/tinysteps/docs/supabase-setup.md)
+- [`docs/nest-supabase-migration.md`](/Users/anhchienvu/Code/tinysteps/docs/nest-supabase-migration.md)
+
+## Contributing
+
+See [`CONTRIBUTING.md`](/Users/anhchienvu/Code/tinysteps/CONTRIBUTING.md).

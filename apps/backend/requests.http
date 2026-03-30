@@ -1,0 +1,151 @@
+### Backend API quick tests
+### Paste a fresh Firebase ID token below when you want to test protected routes.
+@baseUrl = http://localhost:3001/api
+@authToken = PASTE_FIREBASE_ID_TOKEN_HERE
+@childId = REPLACE_CHILD_ID
+
+### Health check
+GET {{baseUrl}}/health
+
+### Supabase connection health
+GET {{baseUrl}}/database/health
+
+### Current authenticated Firebase user
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{authToken}}
+
+### List children for current user
+GET {{baseUrl}}/children
+Authorization: Bearer {{authToken}}
+
+### Create a child
+POST {{baseUrl}}/children
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Emma Vu",
+  "birthDate": "2025-11-18",
+  "notes": "Loves contact naps and bottle feeding.",
+  "photo": ""
+}
+
+### Get one child by id
+GET {{baseUrl}}/children/{{childId}}
+Authorization: Bearer {{authToken}}
+
+### Update a child
+PATCH {{baseUrl}}/children/{{childId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Emma Nguyen Vu",
+  "notes": "Now tracking a more regular bedtime routine."
+}
+
+### Delete a child
+DELETE {{baseUrl}}/children/{{childId}}
+Authorization: Bearer {{authToken}}
+
+### List feedings for a child
+GET {{baseUrl}}/children/{{childId}}/feedings
+Authorization: Bearer {{authToken}}
+
+### Create a feeding log
+POST {{baseUrl}}/children/{{childId}}/feedings
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "timestamp": "2026-03-29T14:30:00.000Z",
+  "type": "bottle",
+  "amount": 120,
+  "unit": "ml",
+  "notes": "Finished the full bottle calmly."
+}
+
+### List sleep logs for a child
+GET {{baseUrl}}/children/{{childId}}/sleeps
+Authorization: Bearer {{authToken}}
+
+### Create a sleep log
+POST {{baseUrl}}/children/{{childId}}/sleeps
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "startTime": "2026-03-29T20:15:00.000Z",
+  "endTime": "2026-03-29T21:05:00.000Z",
+  "notes": "Short evening nap"
+}
+
+### List diaper logs for a child
+GET {{baseUrl}}/children/{{childId}}/diapers
+Authorization: Bearer {{authToken}}
+
+### Create a diaper log
+POST {{baseUrl}}/children/{{childId}}/diapers
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "timestamp": "2026-03-29T16:40:00.000Z",
+  "type": "wet",
+  "notes": "Quick change after feeding"
+}
+
+### List health logs for a child
+GET {{baseUrl}}/children/{{childId}}/health-logs
+Authorization: Bearer {{authToken}}
+
+### Create a health log
+POST {{baseUrl}}/children/{{childId}}/health-logs
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "timestamp": "2026-03-29T18:15:00.000Z",
+  "type": "symptom",
+  "title": "Mild fever",
+  "notes": "Temperature was 37.8C after nap."
+}
+
+### List invites for a child
+GET {{baseUrl}}/children/{{childId}}/invites
+Authorization: Bearer {{authToken}}
+
+### Create an invite
+POST {{baseUrl}}/children/{{childId}}/invites
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "inviteeEmail": "caregiver@example.com",
+  "childName": "Emma"
+}
+
+### Decline an invite
+PATCH {{baseUrl}}/children/{{childId}}/invites/REPLACE_INVITE_ID/decline
+Authorization: Bearer {{authToken}}
+
+### List incoming invites for current account
+GET {{baseUrl}}/invites/me
+Authorization: Bearer {{authToken}}
+
+### Accept an incoming invite
+PATCH {{baseUrl}}/invites/REPLACE_INVITE_ID/accept
+Authorization: Bearer {{authToken}}
+
+### Decline an incoming invite
+PATCH {{baseUrl}}/invites/REPLACE_INVITE_ID/decline
+Authorization: Bearer {{authToken}}
+
+### AI chat reply for a child
+POST {{baseUrl}}/children/{{childId}}/ai-chat
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "message": "Give me a summary of today"
+}
