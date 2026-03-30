@@ -34,6 +34,8 @@ Important frontend env var:
 NEXT_PUBLIC_API_BASE_URL=https://YOUR_BACKEND_URL/api
 ```
 
+Make sure the value includes `/api` at the end, because the Nest backend uses a global `/api` prefix.
+
 ## 3. Backend on Render
 
 This repo includes [`render.yaml`](/Users/anhchienvu/Code/tinysteps/render.yaml).
@@ -47,6 +49,7 @@ In Render:
 Required backend env vars:
 
 - `PORT`
+- `CORS_ORIGINS`
 - `FIREBASE_PROJECT_ID`
 - `FIREBASE_CLIENT_EMAIL`
 - `FIREBASE_PRIVATE_KEY`
@@ -59,6 +62,12 @@ Health check path:
 
 ```text
 /api/health
+```
+
+Example production CORS value:
+
+```env
+CORS_ORIGINS=https://tiny-steps-frontend.vercel.app
 ```
 
 ## 4. Database and Auth
