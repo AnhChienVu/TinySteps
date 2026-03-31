@@ -212,7 +212,7 @@ export default function DashboardPage() {
               <h1 className="serif text-4xl font-bold text-black">
                 Add your first child profile
               </h1>
-              <p className="mx-auto max-w-2xl text-black/50">
+              <p className="mx-auto max-w-2xl text-black/65">
                 Once you create a child profile, the header selector and all
                 protected pages will follow that selection automatically.
               </p>
@@ -293,7 +293,7 @@ export default function DashboardPage() {
               <h1 className="serif text-3xl font-bold text-black sm:text-4xl">
                 {activeChild.name}&apos;s dashboard
               </h1>
-              <p className="max-w-2xl text-sm text-black/50 sm:text-base">
+              <p className="max-w-2xl text-sm text-black/65 sm:text-base">
                 Today&apos;s care snapshot, quick insights, and one-tap access
                 to the most useful tools.
               </p>
@@ -310,7 +310,7 @@ export default function DashboardPage() {
                     <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-2xl bg-olive/10 text-olive">
                       <Icon size={18} />
                     </div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-black/35">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-black/60">
                       {card.title}
                     </p>
                     <p className="mt-1 text-lg font-semibold text-black">
@@ -348,7 +348,7 @@ export default function DashboardPage() {
                 </div>
               ))}
               {insights.length === 0 ? (
-                <div className="rounded-3xl border border-black/5 bg-warm-bg px-4 py-3 text-sm text-black/45">
+                <div className="rounded-3xl border border-black/5 bg-warm-bg px-4 py-3 text-sm text-black/60">
                   Add more activity logs to unlock richer day-by-day insights.
                 </div>
               ) : null}
@@ -365,7 +365,7 @@ export default function DashboardPage() {
                   key={item.title}
                   className="rounded-3xl border border-black/5 bg-warm-bg px-4 py-3"
                 >
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-black/35">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-black/60">
                     {item.title}
                   </p>
                   <p className="mt-1 text-sm text-black/60">{item.value}</p>
@@ -381,7 +381,7 @@ export default function DashboardPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-olive">
                 Explore Features
               </p>
-              <p className="mt-1 text-sm text-black/45">
+              <p className="mt-1 text-sm text-black/60">
                 Jump straight into logging and analysis tools.
               </p>
             </div>
@@ -402,7 +402,7 @@ export default function DashboardPage() {
                     </div>
                     <div>
                       <p className="font-semibold text-black">{feature.title}</p>
-                      <p className="mt-1 text-sm text-black/45">
+                      <p className="mt-1 text-sm text-black/60">
                         {feature.description}
                       </p>
                     </div>

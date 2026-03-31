@@ -71,7 +71,7 @@ export const Input = ({
   ...props
 }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) => (
   <div className="space-y-1.5">
-    <label className="text-xs font-semibold uppercase tracking-wider text-black/40 ml-1">
+    <label className="ml-1 text-xs font-semibold uppercase tracking-wider text-black/60">
       {label}
     </label>
     <input
@@ -90,7 +90,7 @@ export const Select = ({
   options: { value: string; label: string }[];
 } & React.SelectHTMLAttributes<HTMLSelectElement>) => (
   <div className="space-y-1.5">
-    <label className="text-xs font-semibold uppercase tracking-wider text-black/40 ml-1">
+    <label className="ml-1 text-xs font-semibold uppercase tracking-wider text-black/60">
       {label}
     </label>
     <select

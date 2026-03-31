@@ -62,7 +62,7 @@ export default function AppNavigation() {
                     </div>
                     <div>
                       <p className="font-semibold text-black">{item.label}</p>
-                      <p className="text-sm text-black/45">
+                      <p className="text-sm text-black/60">
                         {item.description}
                       </p>
                     </div>
@@ -99,9 +99,10 @@ export default function AppNavigation() {
               <button
                 key={item.href}
                 onClick={() => router.push(item.href)}
+                aria-label={`Go to ${item.label}`}
                 className={cn(
                   'flex flex-col items-center gap-1 transition-colors',
-                  isActive ? 'text-olive' : 'text-black/30',
+                  isActive ? 'text-olive' : 'text-black/60',
                 )}
               >
                 <Icon size={24} />
